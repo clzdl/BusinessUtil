@@ -1,9 +1,9 @@
 #ifndef _PUBLIC_FUN_LIB_H_
 #define _PUBLIC_FUN_LIB_H_
 
+#include <PubDefine.h>
 #include "openssl/md5.h"
 
-#include "AppDefine.h"
 #include "PatternMatcher.h"
 #include "StringUtil.h"
 /// macro definition file
