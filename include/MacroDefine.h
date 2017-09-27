@@ -9,7 +9,6 @@
 #define MACRODEFINE_H_
 
 
-
 ////////////////////logic macro
 #define SUCCESS         0
 #define FAIL            -1
@@ -52,7 +51,7 @@
 /////
 /////
 #ifdef _DEBUG
-#define MSG_DEBUG(FMT,...)      printf("[%s,%d]"FMT ,__FILE__ ,__LINE__, ##__VA_ARGS__)
+#define MSG_DEBUG(FMT,...)      printf("[%s,%d]" FMT , __FILE__,__LINE__, ##__VA_ARGS__);
 #else
 #define MSG_DEBUG(FMT,...)
 #endif
