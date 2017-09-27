@@ -152,9 +152,9 @@ const string BusiUtil::Decrypt(const string& sCipher)
 
         l_cPassHign[i] = (l_cPassHign[i] - 3 + 5 - (m_sKey[ki] % 5)) % 5 + 3;
 
-	l_cPassLow[i] = l_cPassLow[i] ^ (m_sKey[ki] & 0x0f);
+        l_cPassLow[i] = l_cPassLow[i] ^ (m_sKey[ki] & 0x0f);
 
-	ki = (ki == (m_sKey.size() - 1)) ? 0 : ki + 1;
+        ki = (ki == (m_sKey.size() - 1)) ? 0 : ki + 1;
     }
 
 
