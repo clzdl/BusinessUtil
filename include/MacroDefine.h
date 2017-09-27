@@ -8,6 +8,7 @@
 #ifndef MACRODEFINE_H_
 #define MACRODEFINE_H_
 
+#include "NumberUtil.h"
 
 ////////////////////logic macro
 #define SUCCESS         0
@@ -34,19 +35,19 @@
 
 ///// logger macro
 #ifndef LOGGER_FATAL
-#define LOGGER_FATAL(logger , msg)      (logger).fatal( string("[")+ __FILE__ + "," + Number2String(__LINE__) + "]"  +msg);
+#define LOGGER_FATAL(logger , msg)      (logger).fatal( string("[")+ __FILE__ + "," + CommonUtils::NumberUtil::Number2String(__LINE__) + "]" + msg);
 #endif
 
 #ifndef LOGGER_ERROR
-#define LOGGER_ERROR(logger , msg)      (logger).error( string("[")+ __FILE__ + "," + Number2String(__LINE__) + "]" + msg);
+#define LOGGER_ERROR(logger , msg)      (logger).error( string("[")+ __FILE__ + "," + CommonUtils::NumberUtil::Number2String(__LINE__) + "]" + msg);
 #endif
 
 #ifndef LOGGER_INFO
-#define LOGGER_INFO(logger , msg)       (logger).information( string("[") + __FILE__ +"," + Number2String(__LINE__) + "]" + msg);
+#define LOGGER_INFO(logger , msg)       (logger).information( string("[") + __FILE__ +"," + CommonUtils::NumberUtil::Number2String(__LINE__) + "]" + msg);
 #endif
 
 #ifndef LOGGER_DEBUG
-#define LOGGER_DEBUG(logger , msg)      (logger).debug( string("[") + __FILE__  + "," + Number2String(__LINE__) + "]" + msg);
+#define LOGGER_DEBUG(logger , msg)      (logger).debug( string("[") + __FILE__  + "," + CommonUtils::NumberUtil::Number2String(__LINE__) + "]" + msg);
 #endif
 /////
 /////
@@ -61,7 +62,7 @@
 
 ////define oracle exceptin
 #define DUMP_OTL_EXCEPTION(logger , e)          {                   \
-            LOGGER_ERROR(logger,Number2String(e.code));             \
+            LOGGER_ERROR(logger,CommonUtils::NumberUtil::Number2String(e.code));             \
             LOGGER_ERROR(logger,(const char*)e.msg);                \
             LOGGER_ERROR(logger,(const char*)e.stm_text);           \
             LOGGER_ERROR(logger,(const char*)e.var_info);           \
