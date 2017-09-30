@@ -32,42 +32,19 @@
 #define ORA_DISCONNECT       3114
 
 
-
-///// logger macro
-#ifndef LOGGER_FATAL
-#define LOGGER_FATAL(logger , msg)      (logger).fatal( string("[")+ __FILE__ + "," + CommonUtils::NumberUtil::Number2String(__LINE__) + "]" + msg);
-#endif
-
-#ifndef LOGGER_ERROR
-#define LOGGER_ERROR(logger , msg)      (logger).error( string("[")+ __FILE__ + "," + CommonUtils::NumberUtil::Number2String(__LINE__) + "]" + msg);
-#endif
-
-#ifndef LOGGER_INFO
-#define LOGGER_INFO(logger , msg)       (logger).information( string("[") + __FILE__ +"," + CommonUtils::NumberUtil::Number2String(__LINE__) + "]" + msg);
-#endif
-
-#ifndef LOGGER_DEBUG
-#define LOGGER_DEBUG(logger , msg)      (logger).debug( string("[") + __FILE__  + "," + CommonUtils::NumberUtil::Number2String(__LINE__) + "]" + msg);
-#endif
-/////
-/////
-#ifdef _DEBUG
-#define MSG_DEBUG(FMT,...)      printf("[%s,%d]" FMT , __FILE__,__LINE__, ##__VA_ARGS__);
-#else
-#define MSG_DEBUG(FMT,...)
-#endif
-
-
-
-
 ////define oracle exceptin
 #define DUMP_OTL_EXCEPTION(logger , e)          {                   \
-            LOGGER_ERROR(logger,CommonUtils::NumberUtil::Number2String(e.code));             \
-            LOGGER_ERROR(logger,(const char*)e.msg);                \
-            LOGGER_ERROR(logger,(const char*)e.stm_text);           \
-            LOGGER_ERROR(logger,(const char*)e.var_info);           \
+            poco_error(logger,CommonUtils::NumberUtil::Number2String(e.code));             \
+            poco_error(logger,(const char*)e.msg);                \
+            poco_error(logger,(const char*)e.stm_text);           \
+            poco_error(logger,(const char*)e.var_info);           \
             }
 
+#ifdef _DEBUG
+#define _MSG_DEBUG(FMT, ...) fprintf(stdout, "[%s,%d]" FMT , __FILE__, __LINE__, ##__VA_ARGS__)
+#else
+#define _MSG_DEBUG()
+#endif
 
 //// chk != chk_code  返回 ret_code
 #define NQ_CHK_RETURN(chk , chk_code , ret_code)         if(chk_code != chk) return ret_code;

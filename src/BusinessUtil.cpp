@@ -249,7 +249,7 @@ int BusiUtil::DateSpan(string strBegDate , string strEndDate , int iFlag , int &
     int iEndM = 0;
     int iEndD = 0;
 
-    MSG_DEBUG("src:%s,dst:%s \n" , strBegDate.c_str(),strEndDate.c_str());
+    _MSG_DEBUG("src:%s,dst:%s \n" , strBegDate.c_str(),strEndDate.c_str());
 
     switch(iFlag)
     {
@@ -281,7 +281,7 @@ int BusiUtil::DateSpan(string strBegDate , string strEndDate , int iFlag , int &
             iEndY = atoi(strEndDate.substr(0,4).c_str());
             iEndM = atoi(strEndDate.substr(4,2).c_str());   ///
 
-            MSG_DEBUG("begY=%d,begM=%d,endY=%d,endM=%d \n" , iBegY,iBegM , iEndY,iEndM);
+            _MSG_DEBUG("begY=%d,begM=%d,endY=%d,endM=%d \n" , iBegY,iBegM , iEndY,iEndM);
 
             iSpan = (iEndY-iBegY) * 12 + (iEndM - iBegM) ;
 

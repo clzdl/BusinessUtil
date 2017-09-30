@@ -62,7 +62,7 @@ int InvokeBase::ReceivePackage()
     try
     {
         std::istream& rs = m_pHttpSession->receiveResponse(response);
-        MSG_DEBUG("response status : %d \n" ,response.getStatus() );
+        _MSG_DEBUG("response status : %d \n" ,response.getStatus() );
         if(200 != response.getStatus())
         {
             m_strErrInfo = "response status " +  CommonUtils::NumberUtil::Number2String(response.getStatus());
@@ -74,7 +74,7 @@ int InvokeBase::ReceivePackage()
         if(!response.getKeepAlive())
         {
             ////keep-alive : close
-        	MSG_DEBUG("close session.\n");
+        	_MSG_DEBUG("close session.\n");
             m_pHttpSession->reset();
         }
 
