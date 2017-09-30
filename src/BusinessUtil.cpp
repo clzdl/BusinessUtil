@@ -2,7 +2,7 @@
 #include <BusinessUtil.h>
 #include <HashUtil.h>
 #include "Poco/LocalDateTime.h"
-
+#include "BusiExceptions.h"
 using Poco::LocalDateTime;
 
 

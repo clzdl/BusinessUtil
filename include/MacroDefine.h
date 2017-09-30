@@ -27,9 +27,7 @@
 /////record length macro
 #define MAX_RECORD_SIZE         4096
 
-///////oracle error
-#define ORA_PIPE_BREAK       3113
-#define ORA_DISCONNECT       3114
+
 
 
 ////define oracle exceptin
@@ -39,12 +37,6 @@
             poco_error(logger,(const char*)e.stm_text);           \
             poco_error(logger,(const char*)e.var_info);           \
             }
-
-#ifdef _DEBUG
-#define _MSG_DEBUG(FMT, ...) fprintf(stdout, "[%s,%d]" FMT , __FILE__, __LINE__, ##__VA_ARGS__)
-#else
-#define _MSG_DEBUG()
-#endif
 
 //// chk != chk_code  返回 ret_code
 #define NQ_CHK_RETURN(chk , chk_code , ret_code)         if(chk_code != chk) return ret_code;
