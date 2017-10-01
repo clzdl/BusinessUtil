@@ -7,6 +7,7 @@
 
 #include <SdpInvoke/InvokeBase.h>
 #include "NumberUtil.h"
+#include "MacroDefUtil.h"
 #include <sstream>
 
 namespace BusinessUtil
@@ -62,7 +63,7 @@ int InvokeBase::ReceivePackage()
     try
     {
         std::istream& rs = m_pHttpSession->receiveResponse(response);
-        _MSG_DEBUG("response status : %d \n" ,response.getStatus() );
+        _TRACE_MSG("response status : %d \n" ,response.getStatus() );
         if(200 != response.getStatus())
         {
             m_strErrInfo = "response status " +  CommonUtils::NumberUtil::Number2String(response.getStatus());
@@ -74,7 +75,7 @@ int InvokeBase::ReceivePackage()
         if(!response.getKeepAlive())
         {
             ////keep-alive : close
-        	_MSG_DEBUG("close session.\n");
+        	_TRACE_MSG("close session.\n");
             m_pHttpSession->reset();
         }
 
