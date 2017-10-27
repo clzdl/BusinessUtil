@@ -12,11 +12,10 @@
 
 namespace BusinessUtil{
 
-using namespace CommonUtils;
 /**
  * 定义系统级原始的异常
  */
-DECLARE_EXCEPTION(PrimalException, CommonUtils::Exception);
+DECLARE_EXCEPTION(BusiException, CommonUtils::Exception);
 
 
 
