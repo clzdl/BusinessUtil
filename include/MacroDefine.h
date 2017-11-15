@@ -38,6 +38,6 @@
 #define _TRACE_MSG(FMT, ...)
 #endif
 
-#define DUMP_OTL_EXCEPTION(logger , e)    poco_error_f4(logger,"code:%d,msg:%s,stm_text:%s,var_info:%s",e.code,(const char*)e.msg,(const char*)e.stm_text,(const char*)e.var_info)
+#define DUMP_OTL_EXCEPTION(logger , e)    poco_error_f4(logger,"code:%d,msg:%s,stm_text:%s,var_info:%s",e.code,std::string((char*)e.msg),std::string((char*)e.stm_text),std::string((char*)e.var_info))
 
 #endif
