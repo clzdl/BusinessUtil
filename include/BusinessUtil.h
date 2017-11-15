@@ -21,21 +21,21 @@ public:
 	 *		sSid--入参，tns名
 	 *@return：解密后的密码
 	 */
-	static string GetDBPass(const string &encryptFile,const string& sUser, const string& sSid);
+	static std::string GetDBPass(const std::string &encryptFile,const std::string& sUser, const std::string& sSid);
 
 	/*@action:用于加密数据库的密码
 	 *@param：
 	 *		sPass--入参，密码
 	 *@return：加密后字符串
 	 */
-	static const string Encrypt(const string& sPass);
+	static const std::string Encrypt(const std::string &sPass);
 
 	/*@action:用于解密数据库的密码
 	 *@param：
 	 *		sCipher--入参，加密的密码
 	 *@return：解密后字符串
 	 */
-	static const string Decrypt(const string& sCipher);
+	static const std::string Decrypt(const std::string &sCipher);
 
 
 	/*@action :判断某账期是否逾期  20150805
@@ -44,7 +44,7 @@ public:
 	 *      strChargePeriod--入参，缴费周期  start#end#interval
 	 *Return   :true 逾期 false  未逾期
 	 */
-	static bool isOverdue( int cycle_id , string strChargePeriod);
+	static bool isOverdue( int cycle_id , std::string strChargePeriod);
 
 	/*@action :用于获取逾期日期  20150805
 	 *@param:
@@ -52,7 +52,7 @@ public:
 	 *      strChargePeriod--入参，缴费周期  start#end#interval
 	 *Return  : >0 逾期日期， -1-fail
 	 */
-	static int CalcOverdueDate(int cycle_id , string strChargePeriod);
+	static int CalcOverdueDate(int cycle_id , std::string strChargePeriod);
 
 
 	/*@action: 用于计算日期间隔，iFlag= 1：日间隔  2：月间隔，
@@ -63,7 +63,7 @@ public:
 	 *      iSpan--出参，  日期间隔数
 	 *@return: 0-success,-1-fail
 	 */
-	static int DateSpan(string strBegDate , string strEndDate , int iFlag , int &iSpan);
+	static int DateSpan(std::string strBegDate , std::string strEndDate , int iFlag , int &iSpan);
 
 };
 }

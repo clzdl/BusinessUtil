@@ -56,15 +56,11 @@
 #include "Poco/FormattingChannel.h"
 #include "Poco/FileChannel.h"
 #include "Poco/Message.h"
-
 #include "Poco/DateTime.h"
 #include "Poco/LocalDateTime.h"
 #include "Poco/Timespan.h"
 #include "Poco/DateTimeFormat.h"
 #include "Poco/NumberFormatter.h"
-
-
-
 #include "Poco/Foundation.h"
 #include "Poco/Thread.h"
 #include "Poco/ThreadPool.h"
@@ -72,8 +68,6 @@
 #include "Poco/ThreadTarget.h"
 #include "Poco/Mutex.h"
 #include "Poco/Event.h"
-
-
 #include "Poco/Net/NetException.h"
 #include "Poco/Net/HTTPRequest.h"
 #include "Poco/Net/HTTPResponse.h"
@@ -87,17 +81,11 @@
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/HTTPServerResponse.h"
 #include "Poco/Net/ServerSocket.h"
-
 #include "Poco/StreamCopier.h"
-
-
 #include "Poco/Net/FTPClientSession.h"
 #include "Poco/Net/NetException.h"
 #include "Poco/Net/StreamSocket.h"
-
-
 #include "Poco/Exception.h"
-
 ///////////
 #include "Poco/DirectoryIterator.h"
 #include "Poco/Path.h"
@@ -105,101 +93,11 @@
 #include "Poco/HashMap.h"
 
 
-
-
-
-
-
-////////
-using std::vector;
-using std::list;
-using std::stack;
-using std::map;
-using std::cerr;
-using std::cout;
-using std::set;
-using std::cin;
-using std::string;
-using std::ifstream;
-using std::ofstream;
-using std::fstream;
-
-using std::endl;
-
-///////
-using Poco::DateTime;
-using Poco::NumberFormatter;
-using Poco::LocalDateTime;
-using Poco::DateTimeFormat;
-using Poco::Timespan;
-
-
-
-
-using Poco::Util::IniFileConfiguration;
-using Poco::Util::Application;
-using Poco::Util::Option;
-using Poco::Util::OptionSet;
-using Poco::Util::HelpFormatter;
-using Poco::Util::AbstractConfiguration;
-using Poco::Util::PropertyFileConfiguration;
-using Poco::Util::LoggingConfigurator;
-using Poco::Util::OptionCallback;
-using Poco::AutoPtr;
-
-using Poco::Logger;
-using Poco::PatternFormatter;
-using Poco::FormattingChannel;
-using Poco::FileChannel;
-using Poco::Message;
-
-using Poco::Thread;
-using Poco::ThreadPool;
-using Poco::Runnable;
-using Poco::ThreadTarget;
-using Poco::FastMutex;
-using Poco::ScopedLock;
-using Poco::Mutex;
-using Poco::Exception;
-using Poco::FileNotFoundException;
-using Poco::NotFoundException;
-using Poco::NoThreadAvailableException;
-using Poco::Event;
-
-///////////
-//////
-using Poco::Net::HTTPRequest;
-using Poco::Net::HTTPResponse;
-using Poco::Net::NetException;
-using Poco::Net::InvalidSocketException;
-
-using Poco::Net::HTTPClientSession;
-using Poco::Net::HTTPMessage;
-using Poco::Net::HTTPServer;
-using Poco::Net::HTTPServerParams;
-using Poco::Net::HTTPRequestHandler;
-using Poco::Net::AbstractHTTPRequestHandler;
-using Poco::Net::HTTPRequestHandlerFactory;
-using Poco::Net::HTTPRequest;
-using Poco::Net::HTTPServerRequest;
-using Poco::Net::HTTPResponse;
-using Poco::Net::HTTPServerResponse;
-using Poco::Net::ServerSocket;
-using Poco::StreamCopier;
-
-using Poco::Net::FTPClientSession;
-using Poco::Net::FTPException;
-using Poco::Net::NetException;
-using Poco::TimeoutException;
-using Poco::Net::StreamSocket;
-using Poco::Net::SocketAddress;
-
-///////////////
-using Poco::DirectoryIterator;
-using Poco::Path;
-using Poco::SharedLibrary;
-
-using Poco::HashMap;
+enum class RunStatus{
+	stop = 0,   //停止运行状态
+	run = 1,	//正常运行
+	reload = 2	//重新加载参数
+};
 
 
 #endif /* SOAPPDEFINE_H_ */

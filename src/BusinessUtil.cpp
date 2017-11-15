@@ -8,19 +8,19 @@ using Poco::LocalDateTime;
 
 
 ////数据库密码文件加解密密钥
-static const string m_sKey = "`Fx0&8_j[}1";
+static const std::string m_sKey = "`Fx0&8_j[}1";
 
 namespace BusinessUtil
 {
 
 
-string BusiUtil::GetDBPass(const string &encryptFile,const string& sUser, const string& sSid)
+std::string BusiUtil::GetDBPass(const std::string &encryptFile,const std::string& sUser, const std::string& sSid)
 {
     char szUser[64]={0};
     char szPass[14]={0};
     char szDBNames[128]={0};
 
-    ifstream l_ifstream(encryptFile.c_str());
+    std::ifstream l_ifstream(encryptFile.c_str());
     if (l_ifstream.fail())
         return "";
 
@@ -42,9 +42,9 @@ string BusiUtil::GetDBPass(const string &encryptFile,const string& sUser, const 
     return "";
 }
 
-const string BusiUtil::Encrypt(const string& sPass)
+const std::string BusiUtil::Encrypt(const std::string& sPass)
 {
-    string l_sPass(sPass);
+    std::string l_sPass(sPass);
 
     char l_szCipher[13];
 
@@ -58,7 +58,7 @@ const string BusiUtil::Encrypt(const string& sPass)
     if ((l_sPass.size() > 12) || (l_sPass.size() < 3))
         return "";
 
-    if (l_sPass.find('~') != string::npos)
+    if (l_sPass.find('~') != std::string::npos)
         return "";
 
     if (l_sPass.size() < 12)
@@ -116,12 +116,12 @@ const string BusiUtil::Encrypt(const string& sPass)
 	ki = ( ki == (m_sKey.size() - 1) )? 0 : ki+1;
     }
     l_szCipher[12] = 0;
-    return string(l_szCipher);
+    return std::string(l_szCipher);
 }
 
-const string BusiUtil::Decrypt(const string& sCipher)
+const std::string BusiUtil::Decrypt(const std::string& sCipher)
 {
-    string l_sCipher(sCipher);
+	std::string l_sCipher(sCipher);
 
     char l_szPass[13]={"0"};
 
@@ -179,12 +179,12 @@ const string BusiUtil::Decrypt(const string& sCipher)
         }
     }
 
-    return string(l_szPass);
+    return std::string(l_szPass);
 }
 
 
 
-bool BusiUtil::isOverdue( int cycle_id , string strChargePeriod)
+bool BusiUtil::isOverdue( int cycle_id , std::string strChargePeriod)
 {
     int overdue_date = 0;//逾期日期
 
@@ -195,7 +195,7 @@ bool BusiUtil::isOverdue( int cycle_id , string strChargePeriod)
     overdue_date = CalcOverdueDate(cycle_id , strChargePeriod);
     if(-1 == overdue_date)
     {
-        cerr<<"CalcOverdueDate return fail."<<endl;
+        std::cerr<<"CalcOverdueDate return fail."<<std::endl;
         return false;
     }
 
@@ -210,9 +210,9 @@ bool BusiUtil::isOverdue( int cycle_id , string strChargePeriod)
     return false;
 }
 
-int BusiUtil::CalcOverdueDate(int cycle_id , string strChargePeriod)
+int BusiUtil::CalcOverdueDate(int cycle_id , std::string strChargePeriod)
 {
-    vector<string> vecRes;
+    std::vector<std::string> vecRes;
     int year = 0;
     int month = 0;
     int end_day = 0;
@@ -240,7 +240,7 @@ int BusiUtil::CalcOverdueDate(int cycle_id , string strChargePeriod)
     return overdue_date;
 }
 
-int BusiUtil::DateSpan(string strBegDate , string strEndDate , int iFlag , int &iSpan)
+int BusiUtil::DateSpan(std::string strBegDate , std::string strEndDate , int iFlag , int &iSpan)
 {
     int iBegY= 0;
     int iBegM =0;
