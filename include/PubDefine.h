@@ -36,6 +36,8 @@
 #include <map>
 #include <set>
 #include <stack>
+#include <unordered_map>
+#include <unordered_set>
 #include <algorithm>    // std::copy
 #include <math.h>
 #include <memory>
