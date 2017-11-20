@@ -7,7 +7,6 @@
 
 #include <SdpInvoke/InvokeBase.h>
 #include "NumberUtil.h"
-#include "MacroDefUtil.h"
 #include <sstream>
 
 namespace BusinessUtil

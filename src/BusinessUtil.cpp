@@ -3,7 +3,6 @@
 #include <HashUtil.h>
 #include "Poco/LocalDateTime.h"
 #include "BusiExceptions.h"
-#include "MacroDefUtil.h"
 using Poco::LocalDateTime;
 
 
