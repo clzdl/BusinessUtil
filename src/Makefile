@@ -17,7 +17,8 @@ U_OBJS =BusinessUtil.cpp \
 	SdpInvoke/InvokeSoipSendMsg.cpp \
 	SdpInvoke/InvokeTrade.cpp \
 	SdpInvoke/JsonReqNode.cpp \
-	SdpInvoke/JsonRespNode.cpp
+	SdpInvoke/JsonRespNode.cpp \
+	HttpClient.cpp\
 	
 
 
