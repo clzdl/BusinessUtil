@@ -19,11 +19,12 @@ U_OBJS =BusinessUtil.cpp \
 	SdpInvoke/JsonReqNode.cpp \
 	SdpInvoke/JsonRespNode.cpp \
 	HttpClient.cpp\
+	AmqpClient.cpp\
 	
 
 
 #链接库集合
-U_LIB = -lCommonUtil 
+U_LIB = -lCommonUtil  -lamqpcpp
 
 #头文件路径
 U_INC = -I$(PUBLICINCLUDE)/CommonUtil
