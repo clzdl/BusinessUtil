@@ -47,17 +47,19 @@ public:
     std::shared_ptr<AMQP::TcpChannel> CreateChannel();
 
     /**
-     *关闭客户端链接
+     * 客户端重新调度
      */
-    void CloseConnection();
-    /**
-     *  重建客户端链接
-     */
-    void ReBuildConnection();
+    void ReEventLoop();
+
     /**
      * 停止客户段运行
      */
     void Stop();
+
+    /**
+     * 客户端是否停止运行
+     */
+    bool IsStop();
 
     /**
     * 事件监控，新线程中调用
@@ -73,6 +75,11 @@ private:
      * 创建链接地址串
      */
     std::string BuildAddress(std::string user , std::string pwd, std::string host , short port , std::string vhost);
+
+    /**
+     *关闭客户端链接
+     */
+    void CloseConnection();
 
     std::map<int,int> m_fdMap;
     ITcpHandler *m_tcpHandler;
@@ -98,14 +105,24 @@ public:
      *  @param  connection      The connection that was closed and that is now unusable
      */
     virtual void onClosed(AMQP::TcpConnection *connection) {
-        if(!m_QmqpClient->m_stop)
-        {
-            m_QmqpClient->ReBuildConnection();
-            return ;
-        }
-        m_QmqpClient->CloseConnection();
+        m_QmqpClient->m_stop = true;
     }
 
+    /**
+     *  Method that is called by the AMQP library when a fatal error occurs
+     *  on the connection, for example because data received from RabbitMQ
+     *  could not be recognized.
+     *  @param  connection      The connection on which the error occured
+     *  @param  message         A human readable error message
+     */
+    virtual void onError(AMQP::TcpConnection *connection, const char *message)
+    {
+        // @todo
+        //  add your own implementation, for example by reporting the error
+        //  to the user of your program, log the error, and destruct the
+        //  connection object because it is no longer in a usable state
+        m_QmqpClient->m_stop = true;
+    }
 
     /**
      *  Method that is called by the AMQP-CPP library when it wants to interact

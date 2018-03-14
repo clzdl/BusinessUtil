@@ -34,10 +34,25 @@ void AmqpClient::EventLoop(ITcpHandler *tcpHandler)
     m_eventThread = new std::thread(std::bind(&AmqpClient::Run ,this));
 }
 
+void AmqpClient::ReEventLoop()
+{
+    CloseConnection();
+    m_eventThread->join();
+    delete m_eventThread;
+
+    m_connection = new AMQP::TcpConnection(m_tcpHandler , *m_address);
+    m_eventThread = new std::thread(std::bind(&AmqpClient::Run ,this));
+}
+
 void AmqpClient::Stop()
 {
     m_stop = true;
     CloseConnection();
+}
+
+bool AmqpClient::IsStop()
+{
+    return m_stop;
 }
 
 void AmqpClient::CloseConnection()
@@ -48,11 +63,6 @@ void AmqpClient::CloseConnection()
         delete m_connection;
         m_connection = nullptr;
     }
-}
-
-void AmqpClient::ReBuildConnection()
-{
-    m_connection = new AMQP::TcpConnection(m_tcpHandler , *m_address);
 }
 
 void AmqpClient::Run()
