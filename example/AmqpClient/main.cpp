@@ -109,14 +109,44 @@ void ProducerAndConsumer()
     }
 }
 
+void PullMessage()
+{
+    int total = 0;
+    BusinessUtil::AmqpClient amqpClient("bill", "BILL", "192.168.88.143" , 5672);
+    //MyTcpHandler myHandler(&amqpClient);
+    BusinessUtil::ITcpHandler myHandler(&amqpClient);
+    amqpClient.EventLoop(&myHandler);
+
+    std::shared_ptr<AMQP::TcpChannel> channel  = amqpClient.CreateChannel();
+    channel->onError([](const char *message){
+        std::cout<<"onError:"<<message<<std::endl;
+    });
+
+    channel->onReady([&total,&channel](){
+         std::cout<<"channel onReady"<<std::endl;
+    });
+
+    while(!amqpClient.IsStop())
+    {
+       sleep(1);
+       channel->get("my-queue").onSuccess([](const AMQP::Message &message, uint64_t deliveryTag, bool redelivered){
+           std::cout<<"get message:"<<std::string(message.body(),message.bodySize())<<std::endl;
+       }).onEmpty([](){
+           std::cout<<"queue is null"<<std::endl;
+       });
+    }
+}
+
 int main(int argc , char* argv[])
 {
-    std::thread t1(ProducerAndConsumer);
-    std::thread t2(Producer);
-    std::thread t3(Consumer);
-    t1.join();
-    t2.join();
-    t3.join();
+//    std::thread t1(ProducerAndConsumer);
+//    std::thread t2(Producer);
+//    std::thread t3(Consumer);
+      std::thread t4(PullMessage);
+//    t1.join();
+//    t2.join();
+//    t3.join();
+      t4.join();
 
     return 0;
 }
