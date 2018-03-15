@@ -60,7 +60,7 @@ Poco::Net::HTTPClientSession* HttpClient::GetHttpClientSession()
 {
 	Poco::Net::HTTPClientSession* sess = nullptr;
 	std::unique_lock<std::mutex> lck(m_mutex);
-	if(m_pool.empty())
+	while(m_pool.empty())
 	{
 		m_condition.wait(lck);
 	}
