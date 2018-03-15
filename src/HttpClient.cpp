@@ -87,8 +87,7 @@ std::string HttpClient::SendGetJsonRequest(std::string uri , std::string data)
 
 std::string HttpClient::SendRequest(std::string uri , std::string data , EunmHttpMethod method)
 {
-	Poco::Net::HTTPClientSession* sess = GetHttpClientSession();
-	std::string result;
+    std::shared_ptr<Poco::Net::HTTPClientSession> sess(GetHttpClientSession() ,[this](Poco::Net::HTTPClientSession *session){ ReleaseClientSession(session);});
 	try
 	{
 		std::string methodString = method == EunmHttpMethod::_post? Poco::Net::HTTPRequest::HTTP_POST : Poco::Net::HTTPRequest::HTTP_GET ;
@@ -114,21 +113,15 @@ std::string HttpClient::SendRequest(std::string uri , std::string data , EunmHtt
 		{
 			sess->reset();
 		}
-
-		result = std::move(ostr.str());
-
+		return ostr.str();
 	}
 	catch (Poco::Exception &e)
 	{
-		ReleaseClientSession(sess);
 		THROW(BusiException , e.displayText());
 	}
 	catch(BusiException &e)
 	{
-		ReleaseClientSession(sess);
 		throw;
 	}
-	ReleaseClientSession(sess);
-	return result;
 }
 }
