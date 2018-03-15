@@ -49,6 +49,16 @@ public:
 
 
 	void SetTimeout(int timeout);
+
+	/**
+     *获取ｓｅｓｓｉｏｎ
+     */
+    Poco::Net::HTTPClientSession* GetHttpClientSession();
+    /**
+     *　释放ｓｅｓｓｉｏｎ
+     */
+    void ReleaseClientSession(Poco::Net::HTTPClientSession* sess);
+
 private:
 	HttpClient();
 	HttpClient(std::string server , int port,int maxCnt);
@@ -60,14 +70,7 @@ private:
 	HttpClient& operator = (HttpClient &&hc) = delete;
 
 	void Initilize();
-	/**
-	 *获取ｓｅｓｓｉｏｎ
-	 */
-	Poco::Net::HTTPClientSession* GetHttpClientSession();
-	/**
-	 *　释放ｓｅｓｓｉｏｎ
-	 */
-	void ReleaseClientSession(Poco::Net::HTTPClientSession* sess);
+
 
 	/**
 	 *发送请求
