@@ -20,7 +20,7 @@ U_OBJS =BusinessUtil.cpp \
 	SdpInvoke/JsonRespNode.cpp \
 	HttpClient.cpp\
 	AmqpClient.cpp\
-	
+	TaskChain.cpp\
 
 
 #链接库集合
