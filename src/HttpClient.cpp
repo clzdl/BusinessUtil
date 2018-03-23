@@ -11,9 +11,9 @@
 
 namespace BusinessUtil{
 
-HttpClient* HttpClient::Create(std::string server , int port,int maxCnt)
+HttpClient* HttpClient::Create(std::string server , int port,int maxCnt,int timeout)
 {
-	HttpClient *ptr = new HttpClient(server,port,maxCnt);
+	HttpClient *ptr = new HttpClient(server,port,maxCnt,timeout);
 	ptr->Initilize();
 	return ptr;
 }
@@ -26,11 +26,11 @@ HttpClient::HttpClient()
 
 }
 
-HttpClient::HttpClient(std::string server , int port,int maxCnt)
+HttpClient::HttpClient(std::string server , int port,int maxCnt,int timeout)
 :m_server(server),
  m_port(port),
  m_uCnt(maxCnt),
- m_timeout(5)
+ m_timeout(timeout)
 {
 
 }
@@ -45,7 +45,9 @@ void HttpClient::Initilize()
 	for(int i = 0; i < m_uCnt; ++i)
 	{
 		sess = new Poco::Net::HTTPClientSession();
-		sess->setTimeout(m_timeout);
+		sess->setHost(m_server);
+		sess->setPort(m_port);
+		sess->setTimeout(Poco::Timespan(m_timeout,0));
 		sess->setKeepAlive(true);
 		m_pool.push_back(sess);
 	}
@@ -67,7 +69,8 @@ Poco::Net::HTTPClientSession* HttpClient::GetHttpClientSession()
 
 	sess = m_pool.back();
 	m_pool.pop_back();
-	return sess;
+
+	return RefreshSession(sess);
 }
 
 void HttpClient::ReleaseClientSession(Poco::Net::HTTPClientSession* sess)
@@ -124,5 +127,22 @@ std::string HttpClient::SendRequest(std::string uri , std::string data , EunmHtt
 	{
 		throw;
 	}
+}
+
+Poco::Net::HTTPClientSession* HttpClient::RefreshSession(Poco::Net::HTTPClientSession *session)
+{
+    if(m_timeout != session->getTimeout().seconds())
+    {
+        session->setTimeout(Poco::Timespan(m_timeout,0));
+    }
+    if(m_server != session->getHost())
+    {
+        session->setHost(m_server);
+    }
+    if(m_port != session->getPort())
+    {
+        session->setPort(m_port);
+    }
+    return session;
 }
 }

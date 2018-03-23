@@ -36,7 +36,7 @@ public:
 	/**
 	 *
 	 */
-	static HttpClient* Create(std::string server , int port , int maxCnt = 4);
+	static HttpClient* Create(std::string server , int port , int maxCnt = 4 , int timeout = 30);
 
 	/**
 	 * ｐｓｏｔ请求
@@ -61,7 +61,7 @@ public:
 
 private:
 	HttpClient();
-	HttpClient(std::string server , int port,int maxCnt);
+	HttpClient(std::string server , int port,int maxCnt,int timeout);
 	~HttpClient();
 	HttpClient(const HttpClient &hc ) = delete;
 	HttpClient& operator = (const HttpClient &hc) = delete;
@@ -71,7 +71,7 @@ private:
 
 	void Initilize();
 
-
+	Poco::Net::HTTPClientSession* RefreshSession(Poco::Net::HTTPClientSession *session);
 	/**
 	 *发送请求
 	 */
