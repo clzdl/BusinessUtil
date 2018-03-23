@@ -47,7 +47,7 @@ typedef struct SoipSmsRetInfo
 class InvokeSoipSendMsg:public InvokeBase
 {
 public:
-    InvokeSoipSendMsg(HTTPClientSession *pHttpSession , std::string strService ,std::string strBusid,std::string strSecretKey="");
+    InvokeSoipSendMsg(HTTPClientSession *pHttpSession , std::string strService ,std::string strBusid,std::string strSecretKey="", bool externChannel = false);
     ~InvokeSoipSendMsg();
 
     void SetBusinessId(std::string id);
@@ -55,18 +55,16 @@ public:
     void SetOrderSeq(std::string code);
     void SetReqDate(std::string no);
     void SetSignType(int type);
-
     void SetSubBusinessId(std::string id);
-
+    void SetExternChannel(bool externChannel);
     void InsertSoipSmsInfo(const _SOIP_SMS_INFO &ssi);
+    void CleanSoipSmsInfo();
 
     int GetReturnCode();
     std::string GetErrMsg();
     std::string GetMsgId();
     std::string GetOrderId();
-
-
-
+    bool IsExternChannel() const;
 
 private:
     int MakePackage();
@@ -107,6 +105,7 @@ private:
     std::vector<_SOIP_SMS_INFO> m_vecSoipSms;
     _SOIP_SMS_RET_INFO m_stSoipSmsRet; ///soip返回信息
 
+    bool m_externChannel;   //false-内部通道,true-启用外部通道
 };
 
 }

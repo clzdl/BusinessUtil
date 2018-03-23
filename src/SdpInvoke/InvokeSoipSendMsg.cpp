@@ -13,18 +13,20 @@
 #include "Md5Util.h"
 #include "NumberUtil.h"
 
+#define EXTERNALCHANNEL     "1"
 namespace BusinessUtil
 {
 
 
-InvokeSoipSendMsg::InvokeSoipSendMsg(HTTPClientSession *pHttpSession , std::string strService,std::string strBusid,std::string strSecretKey)
+InvokeSoipSendMsg::InvokeSoipSendMsg(HTTPClientSession *pHttpSession , std::string strService,std::string strBusid,std::string strSecretKey,bool externChannel)
 :InvokeBase(pHttpSession,strService),
  m_strSecretKey(strSecretKey),
  m_iSignType(1),
  m_strBusinessId(strBusid),
  m_bIsReportFlag(false),
  m_strSmsType("内部通知"),
- m_strSmsSendService(strService)
+ m_strSmsSendService(strService),
+ m_externChannel(externChannel)
 {
 
 }
@@ -58,10 +60,19 @@ void InvokeSoipSendMsg::SetSubBusinessId(std::string id)
     m_strSubBusinessId = id;
 }
 
+void InvokeSoipSendMsg::SetExternChannel(bool externChannel)
+{
+    m_externChannel = externChannel;
+}
 
 void InvokeSoipSendMsg::InsertSoipSmsInfo(const _SOIP_SMS_INFO &ssi)
 {
     m_vecSoipSms.push_back(ssi);
+}
+
+void InvokeSoipSendMsg::CleanSoipSmsInfo()
+{
+    m_vecSoipSms.clear();
 }
 
 int InvokeSoipSendMsg::GetReturnCode()
@@ -79,6 +90,11 @@ std::string InvokeSoipSendMsg::GetMsgId()
 std::string InvokeSoipSendMsg::GetOrderId()
 {
     return m_stSoipSmsRet.strOrderSeq;
+}
+
+bool InvokeSoipSendMsg::IsExternChannel() const
+{
+    return m_externChannel;
 }
 
 int InvokeSoipSendMsg::MakePackage()
@@ -129,73 +145,55 @@ int InvokeSoipSendMsg::ParsePackage()
         free(out);
         out = NULL;
 
-
-
-
         if(SUCCESS == m_stSoipSmsRet.iReturnCode)
         {
             ///MSGID
             json = cJSON_GetObjectItem(jRoot ,"MSGID");
-            if(NULL == json)
+            if(NULL != json)
             {
-                m_strErrInfo = std::string("Error before:44") + cJSON_GetErrorPtr();
-                iRetValue = FAIL;
-                break;
+                out = cJSON_PrintUnformatted(json);
+                memset(strTemp , 0 ,sizeof(strTemp));
+                strncpy(strTemp,out+1 , strlen(out)-2);
+                m_stSoipSmsRet.strMsgId.append(strTemp);
+                free(out);
+                out = NULL;
             }
-
-
-            out = cJSON_PrintUnformatted(json);
-            memset(strTemp , 0 ,sizeof(strTemp));
-            strncpy(strTemp,out+1 , strlen(out)-2);
-            m_stSoipSmsRet.strMsgId.append(strTemp);
-            free(out);
-            out = NULL;
 
             ///ORDERSEQ
             json = cJSON_GetObjectItem(jRoot ,"ORDERSEQ");
-            if(NULL == json)
+            if(NULL != json)
             {
-                m_strErrInfo = std::string("Error before:55") + cJSON_GetErrorPtr();
-                iRetValue = FAIL;
-                break;
+                out = cJSON_PrintUnformatted(json);
+                memset(strTemp , 0 ,sizeof(strTemp));
+                strncpy(strTemp,out+1 , strlen(out)-2);
+                m_stSoipSmsRet.strOrderSeq.append(strTemp);
+                free(out);
+                out = NULL;
             }
-
-            out = cJSON_PrintUnformatted(json);
-            memset(strTemp , 0 ,sizeof(strTemp));
-            strncpy(strTemp,out+1 , strlen(out)-2);
-            m_stSoipSmsRet.strOrderSeq.append(strTemp);
-            free(out);
-            out = NULL;
-
         }
         else
         {
             ///errmsg
             json = cJSON_GetObjectItem(jRoot ,"ERRORMSG");
-            if(NULL == json)
+            if(NULL != json && (out = cJSON_PrintUnformatted(json)) != NULL)
             {
-                m_strErrInfo = std::string("Error before:33") + cJSON_GetErrorPtr();
-                iRetValue = FAIL;
-                break;
+                    strncpy(strTemp,out+1 , strlen(out)-2);
+                    m_stSoipSmsRet.strErrMsg.append(strTemp);
+                    free(out);
+                    out = NULL;
             }
 
-            if((out = cJSON_PrintUnformatted(json)) != NULL)
-            {
-                strncpy(strTemp,out+1 , strlen(out)-2);
-                m_stSoipSmsRet.strErrMsg.append(strTemp);
-                free(out);
-                out = NULL;
-            }
             m_strErrInfo = "soip短信接口返回失败.desc:" + m_stSoipSmsRet.strErrMsg;
             iRetValue = FAIL;
             break;
-
         }
 
     }while(false);
 
     if(jRoot)
+    {
         cJSON_Delete(jRoot);
+    }
 
     return iRetValue;
 }
@@ -216,6 +214,13 @@ int InvokeSoipSendMsg::GenMd5Key( std::string &strMd5)
 
     strBuff.append("BUSINESSID");
     strBuff.append(m_strBusinessId);
+
+    //  if(m_externChannel)
+    //  {
+    //       strBuff.append("EXTERNALCHANNEL");
+    //       strBuff.append(EXTERNALCHANNEL);
+    //  }
+
 
     strBuff.append("ORDERSEQ");
     strBuff.append(m_strOrderSeq);
@@ -260,13 +265,10 @@ int InvokeSoipSendMsg::ConstructBussPackage()
         return FAIL;
     }
 
-
-
     cJSON_AddStringToObject(root, "REQREASON",                "notification");
     cJSON_AddStringToObject(root, "BUSINESSTYPE",             "sharingmobile");
     cJSON_AddStringToObject(root, "SMSTYPE",                  m_strSmsType.c_str());
     cJSON_AddNumberToObject(root, "ISREPORT",                m_bIsReportFlag == true ? 1 : 0 );
-
 
     ///添加具体短信信息
     cJSON *dataArr = cJSON_CreateArray();
@@ -275,7 +277,6 @@ int InvokeSoipSendMsg::ConstructBussPackage()
         m_strErrInfo = " dataArr cJSON_CreateArray fail.";
         return FAIL;
     }
-
 
     for(std::vector<_SOIP_SMS_INFO>::iterator it = m_vecSoipSms.begin(); it != m_vecSoipSms.end(); ++it)
     {
@@ -286,11 +287,7 @@ int InvokeSoipSendMsg::ConstructBussPackage()
             return FAIL;
         }
         ///soip suggest priority value from 0 to 3
-        cJSON_AddNumberToObject(data , "PRIORITY" , it->iPrority%4);
-        cJSON_AddStringToObject(data , "GATEWAYTYPE" , "");
-        cJSON_AddNumberToObject(data , "DUPLICATE" , 0);
         cJSON_AddStringToObject(data , "VALIDTIME" , it->strValidTime.c_str());
-        cJSON_AddStringToObject(data , "ATTIME" , it->strAtTime.c_str());
         cJSON_AddStringToObject(data , "DESTTERMID" , it->strDestTermId.c_str());
         cJSON_AddStringToObject(data , "MSGCONTENT" , it->strMsgContent.c_str());
         cJSON_AddStringToObject(data , "RESERVE" , it->strReserve.c_str());
@@ -302,18 +299,18 @@ int InvokeSoipSendMsg::ConstructBussPackage()
 
     cJSON_AddItemToObject(root , "DATA" , dataArr);
     out = cJSON_PrintUnformatted(root);
-
     m_strSendInfo.append(out);
 
     if(out)
+    {
         free(out);
+    }
 
     if(root)
     {
         cJSON_Delete(root);
         root = NULL;
     }
-
 
     return SUCCESS;
 }
@@ -334,6 +331,12 @@ void InvokeSoipSendMsg::ConstructRequestUri()
     m_strService.append("REQDATE="+m_strReqDate);
     m_strService.append("&");
     m_strService.append("SIGNTYPE="+CommonUtils::NumberUtil::Number2String(m_iSignType));
+
+    if(m_externChannel)
+    {
+        m_strService.append("&EXTERNALCHANNEL=" + std::string(EXTERNALCHANNEL));
+    }
+
     m_strService.append("&");
     m_strService.append("MAC="+m_strMac);
 
