@@ -74,6 +74,7 @@ void HttpClient::ReleaseClientSession(Poco::Net::HTTPClientSession* sess)
 {
 	std::unique_lock<std::mutex> lck(m_mutex);
 	m_pool.push_back(sess);
+	m_condition.notify_one();
 }
 
 std::string HttpClient::SendPostJsonRequest(std::string uri , std::string data)
