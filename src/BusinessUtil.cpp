@@ -296,5 +296,71 @@ int BusiUtil::DateSpan(std::string strBegDate , std::string strEndDate , int iFl
     return 0;
 }
 
+Poco::Logger& BusiUtil::InitLogger(const std::string &strLoggerName,const std::string &strFmt ,const std::string &strLogFile , const char *pTag , std::string strRotationTime)
+{
+    Poco::FormattingChannel* pFCFile = NULL;
+    int iPro = Poco::Message::PRIO_INFORMATION;
+    try
+    {
+        Poco::PatternFormatter *pf = new Poco::PatternFormatter(strFmt);
+        pf->setProperty("times" , "local");
+        pFCFile = new Poco::FormattingChannel(pf);
+
+        Poco::FileChannel *fc = new Poco::FileChannel(strLogFile);
+        ///设置时间属性为本地时间
+        fc->setProperty(Poco::FileChannel::PROP_TIMES, "local");
+        ////设置00：00进行文件切换
+        fc->setProperty(Poco::FileChannel::PROP_ROTATION, strRotationTime);
+        ///设置文件2G进行切换  ,只能选择一种循环方式
+        //fc->setProperty(FileChannel::PROP_ROTATION, "2048 M");
+        fc->setProperty(Poco::FileChannel::PROP_ARCHIVE, "timestamp");
+        pFCFile->setChannel(fc);
+        pFCFile->open();
+        switch(*pTag)
+        {
+            case 'T':  /// A tracing message. This is the lowest priority.
+            case 't':
+                iPro = Poco::Message::PRIO_TRACE;
+                break;
+            case 'D':  /// A debugging message
+            case 'd':
+                iPro = Poco::Message::PRIO_DEBUG;
+                break;
+            case 'I':  /// An informational message, usually denoting the successful completion of an operation.
+            case 'i':
+                iPro = Poco::Message::PRIO_INFORMATION;
+                break;
+
+            case 'N':  /// A notice, which is an information with just a higher priority.
+            case 'n':
+                iPro = Poco::Message::PRIO_NOTICE;
+                break;
+            case 'W':   /// A warning. An operation completed with an unexpected result.
+            case 'w':
+                iPro = Poco::Message::PRIO_WARNING;
+                break;
+            case 'E':   /// An error. An operation did not complete successfully, but the application as a whole is not affected.
+            case 'e':
+                iPro = Poco::Message::PRIO_ERROR;
+                break;
+            case 'C':   /// A critical error. The application might not be able to continue running successfully.
+            case 'c':
+                iPro = Poco::Message::PRIO_CRITICAL;
+                break;
+            case 'F':   /// A fatal error. The application will most likely terminate. This is the highest priority.
+            case 'f':
+                iPro = Poco::Message::PRIO_FATAL;
+                break;
+        }
+    }
+    catch(Poco::Exception &e)
+    {
+       _TRACE_MSG("initLogger exception: %s",e.displayText().c_str());
+       exit(0);
+    }
+
+    return Poco::Logger::create(strLoggerName, pFCFile, iPro);
+}
+
 }
 

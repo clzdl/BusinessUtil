@@ -65,6 +65,15 @@ public:
 	 */
 	static int DateSpan(std::string strBegDate , std::string strEndDate , int iFlag , int &iSpan);
 
+	/*@action:用于初始化日志logger，
+	 *@param：
+	 *      strLoggerName--入参，logger名称
+	 *      strFmt--入参，日志记录格式
+	 *      strLogFile--入参，日志路径
+	 *      pTag--入参，日志级别： T=TRACE,D=DEBUG，I=INFORMATION，N=NOTICE，W=WARNING，E=ERROR，C=CRITICAL，F=FATAL
+	 *@return：logger的引用
+	 */
+	static Poco::Logger &InitLogger(const std::string &strLoggerName,const std::string &strFmt ,const std::string &strLogFile , const char *pTag , std::string strRotationTime = "00:00");
 };
 }
 #endif
