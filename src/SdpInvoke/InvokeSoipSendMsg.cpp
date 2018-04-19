@@ -99,7 +99,8 @@ bool InvokeSoipSendMsg::IsExternChannel() const
 
 int InvokeSoipSendMsg::MakePackage()
 {
-
+    m_strSendInfo.clear();
+    m_strMac.clear();
     if(SUCCESS != ConstructBussPackage())
         return FAIL;
 
