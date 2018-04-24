@@ -33,6 +33,7 @@ enum class EunmHttpMethod
 class HttpClient
 {
 public:
+    ~HttpClient();
 	/**
 	 *
 	 */
@@ -62,7 +63,7 @@ public:
 private:
 	HttpClient();
 	HttpClient(std::string server , int port,int maxCnt,int timeout);
-	~HttpClient();
+
 	HttpClient(const HttpClient &hc ) = delete;
 	HttpClient& operator = (const HttpClient &hc) = delete;
 
